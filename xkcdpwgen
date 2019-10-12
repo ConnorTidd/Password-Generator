@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+import sys
+import random
+import argparse
+
+parser = argparse.ArgumentParser(description="creates a strong password using the xkcd method")
+parser.add_argument("--words", "-w",type=int, help="Number of words to be included in password, default=4", default=4)
+parser.add_argument("--caps", "-c",type=int, help="Number of capitalized words to be included in passwor, default=0", default=0)
+parser.add_argument("--numbers", "-n",type=int, help="Number of numbers to be included in password, default=0", default=0)
+parser.add_argument("--symbols", "-s",type=int, help="Number of symbols to be included in password, default=0", default=0)
+
+args = parser.parse_args()
+
+filepath = "./words.txt"
+
+listofwords = []
+password = []
+
+
+with open(filepath, "r") as file:
+
+	for x in file:
+		listofwords.append(x.rstrip("\n\r"))
+
+
+	
+def printwords():
+	if(args.words<0):
+		args.words = 0
+	
+	for i in range(args.words):
+		password.append(listofwords[random.randint(0, len(listofwords))])
+		
+printwords()
+
+
+def capitalizewords():
+	if(args.caps>args.words):
+		args.caps = args.words
+
+	listofPositionsToCap = random.sample(range(0, len(password)), args.caps)
+	for x in range(len(listofPositionsToCap)):
+		password[listofPositionsToCap[x]]=password[listofPositionsToCap[x]].capitalize()
+		#password[listofPositionsToCap[x]].capitalize()
+
+capitalizewords()
+
+def addnumbers():
+	
+	listofnumberstoadd = []
+	
+	for x in range(args.numbers):
+		listofnumberstoadd.append(random.randint(0, 9))
+
+	for x in range(len(listofnumberstoadd)):
+		password.insert(random.randint(0,len(password)), str(listofnumberstoadd[x]))
+
+addnumbers()
+
+def addsymbols():
+	
+	listofsymbolstoadd = []
+	listofsymbols = ["~","!","@","#","$","%","^","&","*","(",")","-", ":"]
+	
+	for x in range(args.symbols):
+		listofsymbolstoadd.append(listofsymbols[random.randint(0, len(listofsymbols))])
+
+	for x in range(len(listofsymbolstoadd)):
+		password.insert(random.randint(0,len(password)), str(listofsymbolstoadd[x]))
+
+addsymbols()
+
+print ''.join(password)
